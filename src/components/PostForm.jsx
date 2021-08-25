@@ -19,14 +19,14 @@ const PostForm = ({ create }) => {
     <form>
       <MyInput
         type="text"
-        placeholder=" input title"
+        placeholder="input title"
         value={post.title}
         onChange={(event) => setPost({ ...post, title: event.target.value })}
       />
 
       <MyInput
         type="text"
-        placeholder=" input description"
+        placeholder="input description"
         value={post.body}
         onChange={(event) => setPost({ ...post, body: event.target.value })}
       />

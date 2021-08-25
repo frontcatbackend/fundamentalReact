@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/button/MyButton";
@@ -8,18 +8,35 @@ import styles from "./styles/styles.css";
 
 function App() {
   const [posts, setPosts] = useState([
-    { id: 1, title: "бб", body: "аа" },
-    { id: 2, title: "аа", body: "бб" },
-    { id: 3, title: "мм", body: "вв" },
+    { id: 1, title: "The Terminator", body: "Shwarznegger, Michael Biehn" },
+    { id: 2, title: "Rembo", body: "Stallone" },
+    { id: 3, title: "The Green Elephant", body: "Epifancev" },
   ]); //массив постов
+
+
 
   const [selectedSort, setSelectedSort] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const sortedPosts = useMemo(() => {
+    console.log("it is working");
+    if (selectedSort) {
+      return [...posts].sort((a, b) =>
+        a[selectedSort].localeCompare(b[selectedSort])
+      );
+    }
+    return posts;
+  }, [selectedSort, posts]);
+
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter((post) =>
+      post.title.toLowerCase().includes(searchQuery) || post.body.toLowerCase().includes(searchQuery)    
+    );
+    
+  }, [searchQuery, sortedPosts]);
+
   const sortPosts = (sort) => {
     setSelectedSort(sort);
-    setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])));
-    console.log(sort);
   };
 
   const createPost = (newPost) => {
@@ -35,10 +52,10 @@ function App() {
       <PostForm create={createPost} />
       <hr style={{ margin: "15px" }} />
       <div>
-        <MyInput 
-        placeholder="Search . ." 
-        value={searchQuery}
-        onChange={event => setSearchQuery(event.target.va)}
+        <MyInput
+          placeholder="Search . ."
+          value={searchQuery}
+          onChange={event => setSearchQuery(event.target.value)}
         />
         <MySeclect
           value={selectedSort}
@@ -56,10 +73,14 @@ function App() {
           ]}
         />
       </div>
-      {posts.length !== 0 ? (
-        <PostList remove={removePost} posts={posts} title="POST LIST 1" />
+      {sortedAndSearchedPosts.length !== 0 ? (
+        <PostList
+          remove={removePost}
+          posts={sortedAndSearchedPosts}
+          title="Movies List"
+        />
       ) : (
-        <div style={{ textAlign: "center" }}>There is No POSTS</div>
+        <div style={{ textAlign: "center" }}>There are Tickets</div>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const Counter = () => {
     let [count, setCount] = useState(0)
+
     function incr () {
         setCount(count += 5)
         
